@@ -10,6 +10,8 @@ import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
+import java.util.HashMap;
+import java.util.Map;
 
 import de.thetaphi.forbiddenapis.SuppressForbidden;
 
@@ -35,7 +37,7 @@ public class GorFilter {
     private void run() throws IOException {
         while (in.hasNext()) {
             GorRequest request = in.next();
-            if (filter(request)) out.write(request);
+            if (filter(request)) out.write(cleanup(request));
         }
     }
 
@@ -44,6 +46,19 @@ public class GorFilter {
                 && !isBulk(request)
                 && !isLvsMonitoring(request)
                 && !isStatsMonitoring(request);
+    }
+
+    private GorRequest cleanup(GorRequest request) {
+        return new GorRequest(request.meta, request.requestLine, cleanup(request.headers), request.payload);
+    }
+
+    private Map<String, String> cleanup(Map<String, String> headers) {
+        Map<String, String> result = new HashMap<>();
+        headers.forEach((key, value) -> {
+            if (key.equals("Host")) result.put(key, "search.svc.codfw.wmnet");
+            else result.put(key, value);
+        });
+        return result;
     }
 
     private boolean methodFilter(GorRequest request) {

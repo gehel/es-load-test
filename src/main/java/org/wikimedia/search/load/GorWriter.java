@@ -16,13 +16,12 @@ public class GorWriter implements Closeable {
     public void write(GorRequest request) throws IOException {
         write(request.meta);
         write(request.requestLine);
-        out.write(NEW_LINE);
         write(request.headers);
-        out.write(NEW_LINE);
+        out.write("\r\n");
         write(request.payload);
-        out.write(NEW_LINE);
+        out.write('\n');
         out.write(GorRequest.DELIMITER);
-        out.write(NEW_LINE);
+        out.write('\n');
     }
 
     private void write(GorRequest.Meta meta) throws IOException {
@@ -31,7 +30,7 @@ public class GorWriter implements Closeable {
         out.write(meta.uuid);
         out.write(" ");
         out.write(Long.toString(meta.timestamp.toEpochMilli()));
-        out.write(NEW_LINE);
+        out.write("\n");
     }
 
     private void write(GorRequest.RequestLine requestLine) throws IOException {
@@ -40,6 +39,7 @@ public class GorWriter implements Closeable {
         out.write(requestLine.uri);
         out.write(" ");
         out.write(requestLine.protocol);
+        out.write("\r\n");
     }
 
     private void write(Map<String, String> headers) throws IOException {
@@ -47,7 +47,7 @@ public class GorWriter implements Closeable {
             out.write(header.getKey());
             out.write(": ");
             out.write(header.getValue());
-            out.write(NEW_LINE);
+            out.write("\r\n");
         }
     }
 

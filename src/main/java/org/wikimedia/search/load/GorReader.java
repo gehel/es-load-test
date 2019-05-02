@@ -85,7 +85,7 @@ public class GorReader implements Iterator<GorRequest> {
     }
 
     private String parsePayload(Scanner scanner) {
-        StringJoiner joiner = new StringJoiner(GorWriter.NEW_LINE);
+        StringJoiner joiner = new StringJoiner("\n");
         while (scanner.hasNextLine()) {
             joiner.add(scanner.nextLine());
         }
